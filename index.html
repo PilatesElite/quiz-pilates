@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz de Pilates | Pilates Élite</title>
+  <style>
+    :root {
+      --oro-frances: #C9B037;
+      --oro-claro: #E6D58B;
+      --negro: #000;
+      --negro-mate: #1A1A1A;
+      --oro: #FFD700;
+      --plata: #C0C0C0;
+      --bronce: #CD7F32;
+    }
+
+    body {
+      font-family: 'Playfair Display', serif;
+      background-color: var(--negro);
+      color: var(--oro-frances);
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 30px;
+      background-color: var(--negro);
+      border-radius: 12px;
+      border: 2px solid var(--oro-frances);
+    }
+
+    h1, h2 {
+      color: var(--oro-frances);
+      letter-spacing: 1px;
+    }
+
+    button {
+      background-color: var(--oro-frances);
+      color: var(--negro);
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--oro-claro);
+      transform: translateY(-2px);
+    }
+
+    input {
+      padding: 10px;
+      font-size: 1rem;
+      margin: 10px;
+      border-radius: 5px;
+      border: none;
+      width: 80%;
+      max-width: 400px;
+    }
+
+    #ranking-global {
+      margin-top: 30px;
+      display: none;
+    }
+
+    .ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .ranking-table th, .ranking-table td {
+      padding: 12px;
+      border: 1px solid var(--oro-frances);
+    }
+
+    .ranking-table th {
+      background-color: var(--negro-mate);
+    }
+
+    .ranking-table tr:nth-child(even) {
+      background-color: rgba(201, 176, 55, 0.1);
+    }
+
+    .first-place {
+      background-color: var(--oro) !important;
+      color: var(--negro);
+      font-weight: bold;
+    }
+
+    .second-place {
+      background-color: var(--plata) !important;
+      color: var(--negro);
+      font-weight: bold;
+    }
+
+    .third-place {
+      background-color: var(--bronce) !important;
+      color: var(--negro);
+      font-weight: bold;
+    }
+
+    .podium-icon {
+      font-size: 1.5rem;
+      margin-right: 10px;
+    }
+
+    #feedback {
+      display: none;
+      background-color: #e74c3c;
+      color: white;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+    }
+
+    .logo {
+      max-width: 200px;
+      margin-bottom: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="feedback">¡Respuesta incorrecta! Pierdes una vida ❤️</div>
+  <div class="container">
+    <img src="https://static.wixstatic.com/media/ed6298_a9feb3bc2f894f2fb14e07593db423e6~mv2.png/v1/fill/w_438,h_139,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo.png" alt="Pilates Élite" class="logo" />
+
+    <div id="start-screen">
+      <h1>Quiz de Pilates</h1>
+      <input type="text" id="name" placeholder="Nombre completo" required />
+      <input type="email" id="email" placeholder="Correo electrónico" required />
+      <input type="tel" id="phone" placeholder="Teléfono" />
+      <br />
+      <button onclick="startGame()">Comenzar</button>
+    </div>
+
+    <div id="game-screen" class="hidden">
+      <h2 id="question"></h2>
+      <div id="options"></div>
+      <p>Vidas: <span id="lives">3</span> ❤️</p>
+      <p>Puntos: <span id="score">0</span></p>
+    </div>
+
+    <div id="end-screen" class="hidden">
+      <h2>Juego terminado</h2>
+      <p id="final-score"></p>
+      <button onclick="restartGame()">Jugar de nuevo</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = {
+      easy: [
+        {
+          question: "¿Cuál es el principio básico del Pilates que se enfoca en la zona abdominal?",
+          options: ["Powerhouse", "Flexibilidad", "Resistencia"],
+          answer: 0
+        },
+        {
+          question: "¿Qué significa 'centro' en Pilates?",
+          options: ["La parte superior del cuerpo", "El área entre las costillas y la pelvis (Powerhouse)", "Las piernas"],
+          answer: 1
+        }
+      ],
+      medium: [
+        {
+          question: "¿Qué aparato fue inventado por Joseph Pilates para rehabilitación?",
+          options: ["Pelota suiza", "Reformer", "Banda elástica"],
+          answer: 1
+        }
+      ],
+      hard: [
+        {
+          question: "¿Cuál de estos NO es un ejercicio clásico de Pilates?",
+          options: ["The Hundred", "Downward Dog", "Roll Up"],
+          answer: 1
+        }
+      ]
+    };
+
+    let currentLevel = "easy";
+    let currentQuestion = 0;
+    let score = 0;
+    let lives = 3;
+    let playerName = "";
+    let playerEmail = "";
+    let playerPhone = "";
+
+    const startScreen = document.getElementById("start-screen");
+    const gameScreen = document.getElementById("game-screen");
+    const endScreen = document.getElementById("end-screen");
+
+    function startGame() {
+      playerName = document.getElementById("name").value.trim();
+      playerEmail = document.getElementById("email").value.trim();
+      playerPhone = document.getElementById("phone").value.trim();
+
+      if (!playerName || !playerEmail) {
+        alert("Por favor completa al menos nombre y email");
+        return;
+      }
+
+      startScreen.classList.add("hidden");
+      gameScreen.classList.remove("hidden");
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const levelQuestions = questions[currentLevel];
+      if (currentQuestion >= levelQuestions.length) {
+        nextLevel();
+        return;
+      }
+
+      const q = levelQuestions[currentQuestion];
+      document.getElementById("question").textContent = q.question;
+      
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+
+      q.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.onclick = () => checkAnswer(index);
+        optionsDiv.appendChild(button);
+      });
+
+      document.getElementById("lives").textContent = lives;
+      document.getElementById("score").textContent = score;
+    }
+
+    function checkAnswer(selectedIndex) {
+      const correctIndex = questions[currentLevel][currentQuestion].answer;
+      
+      if (selectedIndex === correctIndex) {
+        score += currentLevel === "easy" ? 10 : currentLevel === "medium" ? 20 : 30;
+        currentQuestion++;
+        loadQuestion();
+      } else {
+        lives--;
+        showFeedback();
+        
+        if (lives <= 0) {
+          endGame();
+        } else {
+          currentQuestion++;
+          setTimeout(loadQuestion, 1000);
+        }
+      }
+
+      document.getElementById("lives").textContent = lives;
+      document.getElementById("score").textContent = score;
+    }
+
+    function showFeedback() {
+      const feedback = document.getElementById("feedback");
+      feedback.style.display = "block";
+      setTimeout(() => {
+        feedback.style.display = "none";
+      }, 1000);
+    }
+
+    function nextLevel() {
+      if (currentLevel === "easy") {
+        currentLevel = "medium";
+      } else if (currentLevel === "medium") {
+        currentLevel = "hard";
+      } else {
+        endGame();
+        return;
+      }
+      currentQuestion = 0;
+      loadQuestion();
+    }
+
+    function endGame() {
+      gameScreen.classList.add("hidden");
+      endScreen.classList.remove("hidden");
+      document.getElementById("final-score").textContent = `Puntuación final: ${score} puntos`;
+      saveResults();
+    }
+
+    function saveResults() {
+      const preciseScore = score + Math.random() * 0.99;
+
+      const data = {
+        name: playerName,
+        email: playerEmail,
+        phone: playerPhone,
+        score: score,
+        preciseScore: preciseScore
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycby1ErsIjvGzLVHk6Lu2C5KAC8UXD-8rNort8Y8Tvk3TZBcMFEDQt0FAB7cBFEd8GEfUoA/exec", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log("Guardado en Sheets:", result);
+      })
+      .catch(error => {
+        console.error("Error al guardar en Sheets:", error);
+      });
+    }
+
+    function restartGame() {
+      currentLevel = "easy";
+      currentQuestion = 0;
+      score = 0;
+      lives = 3;
+
+      endScreen.classList.add("hidden");
+      startScreen.classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
