@@ -268,8 +268,8 @@
       })
       .then(response => response.json())
       .then(result => {
-        console.log("Respuesta del servidor:", result);
-        alert("Respuesta del servidor: " + JSON.stringify(result));
+        console.log("Guardado en Sheets:", result);
+        alert("Resultado: " + JSON.stringify(result));
       })
       .catch(error => {
         console.error("Error al guardar en Sheets:", error);
