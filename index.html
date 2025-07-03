@@ -178,7 +178,7 @@
 
       const q = levelQuestions[currentQuestion];
       document.getElementById("question").textContent = q.question;
-      
+
       const optionsDiv = document.getElementById("options");
       optionsDiv.innerHTML = "";
 
@@ -210,7 +210,12 @@
           setTimeout(endGame, 1000);
         } else {
           currentQuestion++;
-          setTimeout(loadQuestion, 1000);
+          const levelQuestions = questions[currentLevel];
+          if (currentQuestion < levelQuestions.length) {
+            setTimeout(loadQuestion, 1000);
+          } else {
+            setTimeout(nextLevel, 1000);
+          }
         }
       }
     }
@@ -282,4 +287,3 @@
   </script>
 </body>
 </html>
-
