@@ -259,7 +259,7 @@
         preciseScore: preciseScore
       };
 
-      fetch("https://script.google.com/macros/s/AKfycby1ErsIjvGzLVHk6Lu2C5KAC8UXD-8rNort8Y8Tvk3TZBcMFEDQt0FAB7cBFEd8GEfUoA/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbz1TdNV_vIY2lnwV5qrx6fTRFZNKhzbn_e5DdQG0pmN759OWqaBVyt3cPTjOOgjqS7ILQ/exec", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -268,10 +268,12 @@
       })
       .then(response => response.json())
       .then(result => {
-        console.log("Guardado en Sheets:", result);
+        console.log("Respuesta del servidor:", result);
+        alert("Respuesta del servidor: " + JSON.stringify(result));
       })
       .catch(error => {
         console.error("Error al guardar en Sheets:", error);
+        alert("Error en fetch: " + error);
       });
     }
 
