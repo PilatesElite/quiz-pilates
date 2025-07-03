@@ -65,53 +65,6 @@
       max-width: 400px;
     }
 
-    #ranking-global {
-      margin-top: 30px;
-      display: none;
-    }
-
-    .ranking-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    .ranking-table th, .ranking-table td {
-      padding: 12px;
-      border: 1px solid var(--oro-frances);
-    }
-
-    .ranking-table th {
-      background-color: var(--negro-mate);
-    }
-
-    .ranking-table tr:nth-child(even) {
-      background-color: rgba(201, 176, 55, 0.1);
-    }
-
-    .first-place {
-      background-color: var(--oro) !important;
-      color: var(--negro);
-      font-weight: bold;
-    }
-
-    .second-place {
-      background-color: var(--plata) !important;
-      color: var(--negro);
-      font-weight: bold;
-    }
-
-    .third-place {
-      background-color: var(--bronce) !important;
-      color: var(--negro);
-      font-weight: bold;
-    }
-
-    .podium-icon {
-      font-size: 1.5rem;
-      margin-right: 10px;
-    }
-
     #feedback {
       display: none;
       background-color: #e74c3c;
@@ -242,25 +195,24 @@
 
     function checkAnswer(selectedIndex) {
       const correctIndex = questions[currentLevel][currentQuestion].answer;
-      
+
       if (selectedIndex === correctIndex) {
         score += currentLevel === "easy" ? 10 : currentLevel === "medium" ? 20 : 30;
         currentQuestion++;
         loadQuestion();
       } else {
         lives--;
+        document.getElementById("lives").textContent = lives;
+        document.getElementById("score").textContent = score;
         showFeedback();
-        
+
         if (lives <= 0) {
-          endGame();
+          setTimeout(endGame, 1000);
         } else {
           currentQuestion++;
           setTimeout(loadQuestion, 1000);
         }
       }
-
-      document.getElementById("lives").textContent = lives;
-      document.getElementById("score").textContent = score;
     }
 
     function showFeedback() {
@@ -330,3 +282,4 @@
   </script>
 </body>
 </html>
+
