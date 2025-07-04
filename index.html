@@ -50,11 +50,11 @@
     <div id="game-screen" class="hidden">
       <h2 id="question"></h2>
       <div id="options"></div>
-      <p>Vidas: <span id="lives">3</span> ❤️</p>
+      <p>Vidas: <span id="lives">3</span> ??</p>
       <p>Puntos: <span id="score">0</span></p>
       <p id="timer">Tiempo: 0.0 s</p>
       <div id="success" class="hidden">¡Correcto!</div>
-      <div id="feedback" class="hidden">¡Incorrecto! Pierdes una vida ❤️</div>
+      <div id="feedback" class="hidden">¡Incorrecto! Pierdes una vida ??</div>
       <div id="end-message" class="hidden">Has gastado las tres vidas. Enviando resultado por WhatsApp...</div>
     </div>
   </div>
@@ -67,7 +67,7 @@ const questions = [
   { question: "¿Qué es el Powerhouse en Pilates?", options: ["El centro de energía del cuerpo", "Una máquina de Pilates", "Un ejercicio avanzado"], answer: 0 },
   { question: "¿En qué ciudad se encuentra Pilates Élite?", options: ["San Vicente del Raspeig", "Alicante capital", "Elche"], answer: 0 },
   { question: "¿Quién creó el método Pilates?", options: ["Joseph Pilates", "Bruce Lee", "Joseph Smith"], answer: 0 },
-  { question: "¿Qué tipo de máquinas hay en Pilates Élite?", options: ["Reformer con torre, Cadillac, Chair y Pilates aéreo", "Solo Reformer", "Solo máquinas de cardio"], answer: 0 },
+  { question: "¿Qué tipo de máquinas hay en Pilates Élite?", options: ["Reformer con torre, Cadillac, Chair", "Solo Reformer", "Solo máquinas de cardio"], answer: 0 },
   { question: "¿Qué aparato se asocia principalmente al Pilates?", options: ["Reformer", "Bicicleta estática", "Cinta de correr"], answer: 0 },
   { question: "¿Qué colores corporativos tiene Pilates Élite?", options: ["Negro y oro francés", "Rojo y blanco", "Verde y azul"], answer: 0 },
   { question: "¿Cuál de estos NO es un principio del Pilates?", options: ["Control", "Fluidez", "Explosividad"], answer: 2 },
@@ -78,6 +78,7 @@ const questions = [
   { question: "¿Dónde están publicadas las normas de funcionamiento del centro Pilates Élite?", options: ["En la app", "En un cartel en la entrada", "Por correo"], answer: 0 },
   { question: "¿Qué otro nombre recibe el método Pilates?", options: ["Contrología", "Flexilogía", "Resistilogía"], answer: 0 },
   { question: "¿Qué app debes usar para reservar en Pilates Élite?", options: ["La app propia de Pilates Élite", "WhatsApp", "Facebook Messenger"], answer: 0 },
+  { question: "¿Qué redes sociales tiene Pilates Élite?", options: ["Instagram, Facebook y YouTube", "Twitter y TikTok", "Solo LinkedIn"], answer: 0 },
   { question: "¿Qué ejercicio clásico se realiza con 100 respiraciones?", options: ["The Hundred", "Roll Up", "Teaser"], answer: 0 },
   { question: "¿Cuánto tiempo antes debes cancelar una clase en Pilates Élite para no consumir el bono?", options: ["Al menos 2 horas", "10 minutos", "1 día"], answer: 0 },
   { question: "¿Qué principio implica moverse con gracia y sin interrupciones?", options: ["Fluidez", "Fuerza", "Explosividad"], answer: 0 },
@@ -100,11 +101,12 @@ const questions = [
   { question: "¿Qué término describe el patrón de respiración en The Hundred?", options: ["Inhalar 5, exhalar 5", "Inhalar 3, exhalar 7", "Inhalar 10, exhalar 10"], answer: 0 },
   { question: "¿Qué se busca especialmente en el ejercicio Teaser?", options: ["Equilibrio y control del centro", "Fuerza explosiva de brazos", "Velocidad en la ejecución"], answer: 0 },
   { question: "¿En qué país nació Joseph Pilates?", options: ["Alemania", "Austria", "Estados Unidos"], answer: 0 },
+  { question: "¿Qué pasa si no cancelas tu clase en Pilates Élite con al menos 2 horas de antelación?", options: ["Se consume el bono", "No pasa nada", "Te cobran una penalización extra"], answer: 0} ,
   { question: "¿Qué ejercicio implica rodar hacia atrás manteniendo el control?", options: ["Rolling like a ball", "The Saw", "Swan"], answer: 0 },
   { question: "¿Qué parte del cuerpo se debe estabilizar al usar el Chair?", options: ["Pelvis y cintura escapular", "Manos y pies", "Cuello"], answer: 0 },
   { question: "¿Qué herramienta se utiliza en Pilates para medir precisión y alineación?", options: ["El espejo y la visualización", "El cronómetro", "La báscula"], answer: 0 },
-  { question: "¿Cuál es la característica clave del Ladder Barrel?", options: ["La curvatura para flexibilidad de columna", "Los muelles de resistencia", "La superficie deslizante"], answer: 0 },
-  { question: "¿Qué se potencia especialmente con el uso del Spine Corrector?", options: ["Flexibilidad de la columna", "Potencia en las piernas", "Fuerza de los bíceps"], answer: 0 },
+  { question: "¿Cuál es una de las posturas básicas del Pilates?", options: ["Perro boca abajo", "Puente", "Cobra"], answer: 1 },
+  { question: "¿Qué tipo de ejercicio es Pilates?", options: ["Resistencia", "Aeróbico", "De bajo impacto"], answer: 2 },
   { question: "¿Qué principio de Pilates está directamente vinculado al movimiento con propósito?", options: ["Precisión", "Explosividad", "Velocidad"], answer: 0 },
   { question: "¿En qué década llegó Joseph Pilates a Estados Unidos?", options: ["1920", "1950", "1970"], answer: 0 },
   { question: "¿Qué aparato de Pilates es el más versátil para cuerpo completo?", options: ["Reformer", "Banda elástica", "Banco de pesas"], answer: 0 },
