@@ -10,9 +10,6 @@
       --oro-claro: #E6D58B;
       --negro: #000;
       --negro-mate: #1A1A1A;
-      --oro: #FFD700;
-      --plata: #C0C0C0;
-      --bronce: #CD7F32;
     }
 
     body {
@@ -35,7 +32,6 @@
 
     h1, h2 {
       color: var(--oro-frances);
-      letter-spacing: 1px;
     }
 
     button {
@@ -113,46 +109,45 @@
   </div>
 
   <script>
-    const questions = {
-      easy: [
-        {
-          question: "¿Cuál es el principio básico del Pilates que se enfoca en la zona abdominal?",
-          options: ["Powerhouse", "Flexibilidad", "Resistencia"],
-          answer: 0
-        },
-        {
-          question: "¿Qué significa 'centro' en Pilates?",
-          options: ["La parte superior del cuerpo", "El área entre las costillas y la pelvis (Powerhouse)", "Las piernas"],
-          answer: 1
-        }
-      ],
-      medium: [
-        {
-          question: "¿Qué aparato fue inventado por Joseph Pilates para rehabilitación?",
-          options: ["Pelota suiza", "Reformer", "Banda elástica"],
-          answer: 1
-        }
-      ],
-      hard: [
-        {
-          question: "¿Cuál de estos NO es un ejercicio clásico de Pilates?",
-          options: ["The Hundred", "Downward Dog", "Roll Up"],
-          answer: 1
-        }
-      ]
-    };
+    const questions = [
+      { question: "¿Qué es el Powerhouse en Pilates?", options: ["El centro de energía del cuerpo", "Una máquina de Pilates", "Un ejercicio avanzado"], answer: 0 },
+      { question: "¿En qué ciudad se encuentra Pilates Élite?", options: ["San Vicente del Raspeig", "Alicante capital", "Elche"], answer: 0 },
+      { question: "¿Quién creó el método Pilates?", options: ["Joseph Pilates", "Bruce Lee", "Joseph Smith"], answer: 0 },
+      { question: "¿Qué tipo de máquinas hay en Pilates Élite?", options: ["Reformer con torre, Cadillac, Chair y Pilates aéreo", "Solo Reformer", "Solo máquinas de cardio"], answer: 0 },
+      { question: "¿Qué aparato se asocia principalmente al Pilates?", options: ["Reformer", "Bicicleta estática", "Cinta de correr"], answer: 0 },
+      { question: "¿Qué colores corporativos tiene Pilates Élite?", options: ["Negro y oro francés", "Rojo y blanco", "Verde y azul"], answer: 0 },
+      { question: "¿Cuál de estos NO es un principio del Pilates?", options: ["Control", "Fluidez", "Explosividad"], answer: 2 },
+      { question: "¿Qué debes traer a tus clases en Pilates Élite?", options: ["Toalla, calcetines antideslizantes y ropa deportiva", "Guantes de boxeo", "Cinturón de pesas"], answer: 0 },
+      { question: "¿Qué tipo de respiración se usa en Pilates?", options: ["Costal lateral", "Abdominal", "Clavicular"], answer: 0 },
+      { question: "¿Dónde está uno de los centros de Pilates Élite?", options: ["Calle Vicente Savall 11", "Calle Mayor 5", "Avenida de la Estación 3"], answer: 0 },
+      { question: "¿Qué máquina permite ejercicios aéreos con cuerdas y muelles?", options: ["Cadillac", "Chair", "Reformer"], answer: 0 },
+      { question: "¿Dónde están publicadas las normas de funcionamiento del centro Pilates Élite?", options: ["En la app", "En un cartel en la entrada", "Por correo"], answer: 0 },
+      { question: "¿Qué otro nombre recibe el método Pilates?", options: ["Contrología", "Flexilogía", "Resistilogía"], answer: 0 },
+      { question: "¿Qué app debes usar para reservar en Pilates Élite?", options: ["La app propia de Pilates Élite", "WhatsApp", "Facebook Messenger"], answer: 0 },
+      { question: "¿Qué ejercicio clásico se realiza con 100 respiraciones?", options: ["The Hundred", "Roll Up", "Teaser"], answer: 0 },
+      { question: "¿Cuánto tiempo antes debes cancelar una clase en Pilates Élite para no consumir el bono?", options: ["Al menos 2 horas", "10 minutos", "1 día"], answer: 0 },
+      { question: "¿Qué principio implica moverse con gracia y sin interrupciones?", options: ["Fluidez", "Fuerza", "Explosividad"], answer: 0 },
+      { question: "¿Qué modalidad de Pilates se ofrece en Pilates Élite?", options: ["Máquinas y aéreo", "Solo suelo", "Solo cardio"], answer: 0 },
+      { question: "¿Qué objetivo tiene el método Pilates?", options: ["Mejorar control corporal y alineación", "Ganar volumen muscular", "Correr más rápido"], answer: 0 },
+      { question: "¿Cómo acceden los alumnos a los horarios de las clases?", options: ["En la app, en la pestaña de reservas", "En un cartel en la puerta", "Por llamada telefónica"], answer: 0 },
+      { question: "¿Dónde desarrolló Joseph Pilates su método durante la Primera Guerra Mundial?", options: ["En un campo de prisioneros", "En un hospital de Berlín", "En Nueva York"], answer: 0 },
+      { question: "¿Cuál de estos NO es un ejercicio clásico de Pilates?", options: ["The Hundred", "Downward Dog", "Roll Up"], answer: 1 },
+      { question: "¿Qué aparato fue inventado por Joseph Pilates para rehabilitación?", options: ["Reformer", "Banda elástica", "Pelota suiza"], answer: 0 },
+      { question: "¿Qué músculo es clave en la activación del Powerhouse?", options: ["Transverso abdominal", "Bíceps", "Trapecio"], answer: 0 },
+      { question: "¿Qué se busca principalmente con el uso del Reformer?", options: ["Fortalecer el centro y alinear el cuerpo", "Mejorar la velocidad", "Incrementar masa muscular"], answer: 0 },
+      { question: "¿Qué principio de Pilates está relacionado con la atención consciente en el movimiento?", options: ["Concentración", "Velocidad", "Explosividad"], answer: 0 },
+      { question: "¿Qué aparato de Pilates tiene una plataforma móvil con muelles?", options: ["Reformer", "Chair", "Ladder Barrel"], answer: 0 },
+      { question: "¿Qué ejercicio de Pilates se realiza tumbado y consiste en rodar hacia arriba lentamente?", options: ["Roll Up", "Teaser", "Swan"], answer: 0 },
+      { question: "¿Qué significa Contrología?", options: ["El arte del control del cuerpo", "Una máquina de Pilates", "Un tipo de respiración"], answer: 0 },
+      { question: "¿Qué accesorio se usa para añadir resistencia en Pilates suelo?", options: ["Magic circle", "Kettlebell", "Pesas rusas"], answer: 0 }
+    ];
 
-    let currentLevel = "easy";
     let currentQuestion = 0;
     let score = 0;
     let lives = 3;
     let playerName = "";
     let playerEmail = "";
     let playerPhone = "";
-
-    const startScreen = document.getElementById("start-screen");
-    const gameScreen = document.getElementById("game-screen");
-    const endScreen = document.getElementById("end-screen");
 
     function startGame() {
       playerName = document.getElementById("name").value.trim();
@@ -164,21 +159,19 @@
         return;
       }
 
-      startScreen.classList.add("hidden");
-      gameScreen.classList.remove("hidden");
+      document.getElementById("start-screen").classList.add("hidden");
+      document.getElementById("game-screen").classList.remove("hidden");
       loadQuestion();
     }
 
     function loadQuestion() {
-      const levelQuestions = questions[currentLevel];
-      if (currentQuestion >= levelQuestions.length) {
-        nextLevel();
+      if (currentQuestion >= questions.length) {
+        endGame();
         return;
       }
 
-      const q = levelQuestions[currentQuestion];
+      const q = questions[currentQuestion];
       document.getElementById("question").textContent = q.question;
-
       const optionsDiv = document.getElementById("options");
       optionsDiv.innerHTML = "";
 
@@ -194,28 +187,20 @@
     }
 
     function checkAnswer(selectedIndex) {
-      const correctIndex = questions[currentLevel][currentQuestion].answer;
-
-      if (selectedIndex === correctIndex) {
-        score += currentLevel === "easy" ? 10 : currentLevel === "medium" ? 20 : 30;
+      if (selectedIndex === questions[currentQuestion].answer) {
+        score += 10;
         currentQuestion++;
         loadQuestion();
       } else {
         lives--;
         document.getElementById("lives").textContent = lives;
-        document.getElementById("score").textContent = score;
         showFeedback();
 
         if (lives <= 0) {
           setTimeout(endGame, 1000);
         } else {
           currentQuestion++;
-          const levelQuestions = questions[currentLevel];
-          if (currentQuestion < levelQuestions.length) {
-            setTimeout(loadQuestion, 1000);
-          } else {
-            setTimeout(nextLevel, 1000);
-          }
+          setTimeout(loadQuestion, 1000);
         }
       }
     }
@@ -228,63 +213,18 @@
       }, 1000);
     }
 
-    function nextLevel() {
-      if (currentLevel === "easy") {
-        currentLevel = "medium";
-      } else if (currentLevel === "medium") {
-        currentLevel = "hard";
-      } else {
-        endGame();
-        return;
-      }
-      currentQuestion = 0;
-      loadQuestion();
-    }
-
     function endGame() {
-      gameScreen.classList.add("hidden");
-      endScreen.classList.remove("hidden");
+      document.getElementById("game-screen").classList.add("hidden");
+      document.getElementById("end-screen").classList.remove("hidden");
       document.getElementById("final-score").textContent = `Puntuación final: ${score} puntos`;
-      saveResults();
-    }
-
-    function saveResults() {
-      const preciseScore = score + Math.random() * 0.99;
-
-      const data = {
-        name: playerName,
-        email: playerEmail,
-        phone: playerPhone,
-        score: score,
-        preciseScore: preciseScore
-      };
-
-      fetch("https://script.google.com/macros/s/AKfycbzi6HDLIHzWjtkobsJWFZP-9PFpo7l0zsEFdoUDNZv-IAynAczKvERwPZz7EISs_mZhYg/exec", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      .then(response => response.json())
-      .then(result => {
-        console.log("Guardado en Sheets:", result);
-        alert("Resultado: " + JSON.stringify(result));
-      })
-      .catch(error => {
-        console.error("Error al guardar en Sheets:", error);
-        alert("Error en fetch: " + error);
-      });
     }
 
     function restartGame() {
-      currentLevel = "easy";
       currentQuestion = 0;
       score = 0;
       lives = 3;
-
-      endScreen.classList.add("hidden");
-      startScreen.classList.remove("hidden");
+      document.getElementById("end-screen").classList.add("hidden");
+      document.getElementById("start-screen").classList.remove("hidden");
     }
   </script>
 </body>
