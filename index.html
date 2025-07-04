@@ -32,7 +32,7 @@
 <body>
   <div class="container">
     <img src="https://static.wixstatic.com/media/ed6298_a9feb3bc2f894f2fb14e07593db423e6~mv2.png/v1/fill/w_438,h_139,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo.png" alt="Pilates Élite" class="logo" />
-    <h1>Juego de Pilates Élite</h1>
+    <h1 id="main-title">Juego de Pilates Élite</h1>
     <div id="start-screen">
       <div id="instructions">
         <strong>Instrucciones:</strong><br/>
@@ -143,6 +143,7 @@ function startGame() {
   if (!playerName || !playerEmail) { alert("Completa nombre y email"); return; }
   document.getElementById("start-screen").classList.add("hidden");
   document.getElementById("game-screen").classList.remove("hidden");
+  document.getElementById("main-title").classList.add("hidden");
   currentQuestion = 0; score = 0; lives = 3;
   startTime = Date.now();
   timerInterval = setInterval(() => {
