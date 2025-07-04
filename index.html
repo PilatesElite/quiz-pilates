@@ -3,229 +3,220 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quiz de Pilates | Pilates Élite</title>
+  <title>Juego de Pilates Élite</title>
   <style>
-    :root {
-      --oro-frances: #C9B037;
-      --oro-claro: #E6D58B;
-      --negro: #000;
-      --negro-mate: #1A1A1A;
-    }
-
-    body {
-      font-family: 'Playfair Display', serif;
-      background-color: var(--negro);
-      color: var(--oro-frances);
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 30px;
-      background-color: var(--negro);
-      border-radius: 12px;
-      border: 2px solid var(--oro-frances);
-    }
-
-    h1, h2 {
-      color: var(--oro-frances);
-    }
-
-    button {
-      background-color: var(--oro-frances);
-      color: var(--negro);
-      border: none;
-      padding: 10px 20px;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 5px;
-      transition: all 0.3s;
-    }
-
-    button:hover {
-      background-color: var(--oro-claro);
-      transform: translateY(-2px);
-    }
-
-    input {
-      padding: 10px;
-      font-size: 1rem;
-      margin: 10px;
-      border-radius: 5px;
-      border: none;
-      width: 80%;
-      max-width: 400px;
-    }
-
-    #feedback {
-      display: none;
-      background-color: #e74c3c;
-      color: white;
-      padding: 10px;
+    body { background: #000; color: #C9B037; font-family: 'Playfair Display', serif; text-align: center; padding: 20px; }
+    .container { max-width: 800px; margin: auto; padding: 30px; border: 2px solid #C9B037; border-radius: 12px; }
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 2rem; }
+    p, input, button { font-size: 1.2rem; }
+    input { padding: 15px; margin: 10px 0; width: 80%; max-width: 400px; border-radius: 5px; border: none; }
+    button { background: #C9B037; color: #000; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+    .logo { max-width: 300px; margin-bottom: 20px; }
+    .hidden { display: none; }
+    #feedback, #success, #end-message { padding: 10px; margin: 10px 0; border-radius: 5px; }
+    #feedback { background: #e74c3c; color: #fff; }
+    #success { background: #27ae60; color: #fff; }
+    #end-message { background: #34495e; color: #fff; font-size: 1.4rem; }
+    #timer { font-size: 2rem; color: #FFD700; margin: 10px 0; }
+    #instructions {
+      background: #C9B037;
+      color: #000;
+      padding: 15px;
+      border-radius: 8px;
       margin-bottom: 15px;
-      border-radius: 5px;
-    }
-
-    .logo {
-      max-width: 200px;
-      margin-bottom: 20px;
-    }
-
-    .hidden {
-      display: none;
+      font-size: 1.2rem;
     }
   </style>
 </head>
 <body>
-  <div id="feedback">¡Respuesta incorrecta! Pierdes una vida ❤️</div>
   <div class="container">
     <img src="https://static.wixstatic.com/media/ed6298_a9feb3bc2f894f2fb14e07593db423e6~mv2.png/v1/fill/w_438,h_139,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo.png" alt="Pilates Élite" class="logo" />
-
+    <h1>Juego de Pilates Élite</h1>
     <div id="start-screen">
-      <h1>Quiz de Pilates</h1>
-      <input type="text" id="name" placeholder="Nombre completo" required />
-      <input type="email" id="email" placeholder="Correo electrónico" required />
-      <input type="tel" id="phone" placeholder="Teléfono" />
-      <br />
+      <div id="instructions">
+        <strong>Instrucciones:</strong><br/>
+        Responde a las preguntas sobre Pilates y sobre nuestro centro Pilates Élite.<br/>
+        Dispones de 3 vidas. Cada fallo resta una vida.<br/>
+        Tu puntuación y tiempo lo mandarás por WhatsApp al finalizar.<br/>
+        ¡Buena suerte!
+      </div>
+      <input id="name" placeholder="Nombre completo" /><br/>
+      <input id="email" placeholder="Correo electrónico" /><br/>
+      <input id="phone" placeholder="Teléfono" /><br/>
       <button onclick="startGame()">Comenzar</button>
     </div>
-
     <div id="game-screen" class="hidden">
       <h2 id="question"></h2>
       <div id="options"></div>
       <p>Vidas: <span id="lives">3</span> ❤️</p>
       <p>Puntos: <span id="score">0</span></p>
-    </div>
-
-    <div id="end-screen" class="hidden">
-      <h2>Juego terminado</h2>
-      <p id="final-score"></p>
-      <button onclick="restartGame()">Jugar de nuevo</button>
+      <p id="timer">Tiempo: 0.0 s</p>
+      <div id="success" class="hidden">¡Correcto!</div>
+      <div id="feedback" class="hidden">¡Incorrecto! Pierdes una vida ❤️</div>
+      <div id="end-message" class="hidden">Has gastado las tres vidas. Enviando resultado por WhatsApp...</div>
     </div>
   </div>
 
+  <audio id="sound-correct" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="sound-wrong" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
+
   <script>
-    const questions = [
-      { question: "¿Qué es el Powerhouse en Pilates?", options: ["El centro de energía del cuerpo", "Una máquina de Pilates", "Un ejercicio avanzado"], answer: 0 },
-      { question: "¿En qué ciudad se encuentra Pilates Élite?", options: ["San Vicente del Raspeig", "Alicante capital", "Elche"], answer: 0 },
-      { question: "¿Quién creó el método Pilates?", options: ["Joseph Pilates", "Bruce Lee", "Joseph Smith"], answer: 0 },
-      { question: "¿Qué tipo de máquinas hay en Pilates Élite?", options: ["Reformer con torre, Cadillac, Chair y Pilates aéreo", "Solo Reformer", "Solo máquinas de cardio"], answer: 0 },
-      { question: "¿Qué aparato se asocia principalmente al Pilates?", options: ["Reformer", "Bicicleta estática", "Cinta de correr"], answer: 0 },
-      { question: "¿Qué colores corporativos tiene Pilates Élite?", options: ["Negro y oro francés", "Rojo y blanco", "Verde y azul"], answer: 0 },
-      { question: "¿Cuál de estos NO es un principio del Pilates?", options: ["Control", "Fluidez", "Explosividad"], answer: 2 },
-      { question: "¿Qué debes traer a tus clases en Pilates Élite?", options: ["Toalla, calcetines antideslizantes y ropa deportiva", "Guantes de boxeo", "Cinturón de pesas"], answer: 0 },
-      { question: "¿Qué tipo de respiración se usa en Pilates?", options: ["Costal lateral", "Abdominal", "Clavicular"], answer: 0 },
-      { question: "¿Dónde está uno de los centros de Pilates Élite?", options: ["Calle Vicente Savall 11", "Calle Mayor 5", "Avenida de la Estación 3"], answer: 0 },
-      { question: "¿Qué máquina permite ejercicios aéreos con cuerdas y muelles?", options: ["Cadillac", "Chair", "Reformer"], answer: 0 },
-      { question: "¿Dónde están publicadas las normas de funcionamiento del centro Pilates Élite?", options: ["En la app", "En un cartel en la entrada", "Por correo"], answer: 0 },
-      { question: "¿Qué otro nombre recibe el método Pilates?", options: ["Contrología", "Flexilogía", "Resistilogía"], answer: 0 },
-      { question: "¿Qué app debes usar para reservar en Pilates Élite?", options: ["La app propia de Pilates Élite", "WhatsApp", "Facebook Messenger"], answer: 0 },
-      { question: "¿Qué ejercicio clásico se realiza con 100 respiraciones?", options: ["The Hundred", "Roll Up", "Teaser"], answer: 0 },
-      { question: "¿Cuánto tiempo antes debes cancelar una clase en Pilates Élite para no consumir el bono?", options: ["Al menos 2 horas", "10 minutos", "1 día"], answer: 0 },
-      { question: "¿Qué principio implica moverse con gracia y sin interrupciones?", options: ["Fluidez", "Fuerza", "Explosividad"], answer: 0 },
-      { question: "¿Qué modalidad de Pilates se ofrece en Pilates Élite?", options: ["Máquinas y aéreo", "Solo suelo", "Solo cardio"], answer: 0 },
-      { question: "¿Qué objetivo tiene el método Pilates?", options: ["Mejorar control corporal y alineación", "Ganar volumen muscular", "Correr más rápido"], answer: 0 },
-      { question: "¿Cómo acceden los alumnos a los horarios de las clases?", options: ["En la app, en la pestaña de reservas", "En un cartel en la puerta", "Por llamada telefónica"], answer: 0 },
-      { question: "¿Dónde desarrolló Joseph Pilates su método durante la Primera Guerra Mundial?", options: ["En un campo de prisioneros", "En un hospital de Berlín", "En Nueva York"], answer: 0 },
-      { question: "¿Cuál de estos NO es un ejercicio clásico de Pilates?", options: ["The Hundred", "Downward Dog", "Roll Up"], answer: 1 },
-      { question: "¿Qué aparato fue inventado por Joseph Pilates para rehabilitación?", options: ["Reformer", "Banda elástica", "Pelota suiza"], answer: 0 },
-      { question: "¿Qué músculo es clave en la activación del Powerhouse?", options: ["Transverso abdominal", "Bíceps", "Trapecio"], answer: 0 },
-      { question: "¿Qué se busca principalmente con el uso del Reformer?", options: ["Fortalecer el centro y alinear el cuerpo", "Mejorar la velocidad", "Incrementar masa muscular"], answer: 0 },
-      { question: "¿Qué principio de Pilates está relacionado con la atención consciente en el movimiento?", options: ["Concentración", "Velocidad", "Explosividad"], answer: 0 },
-      { question: "¿Qué aparato de Pilates tiene una plataforma móvil con muelles?", options: ["Reformer", "Chair", "Ladder Barrel"], answer: 0 },
-      { question: "¿Qué ejercicio de Pilates se realiza tumbado y consiste en rodar hacia arriba lentamente?", options: ["Roll Up", "Teaser", "Swan"], answer: 0 },
-      { question: "¿Qué significa Contrología?", options: ["El arte del control del cuerpo", "Una máquina de Pilates", "Un tipo de respiración"], answer: 0 },
-      { question: "¿Qué accesorio se usa para añadir resistencia en Pilates suelo?", options: ["Magic circle", "Kettlebell", "Pesas rusas"], answer: 0 }
-    ];
+const questions = [
+  { question: "¿Qué es el Powerhouse en Pilates?", options: ["El centro de energía del cuerpo", "Una máquina de Pilates", "Un ejercicio avanzado"], answer: 0 },
+  { question: "¿En qué ciudad se encuentra Pilates Élite?", options: ["San Vicente del Raspeig", "Alicante capital", "Elche"], answer: 0 },
+  { question: "¿Quién creó el método Pilates?", options: ["Joseph Pilates", "Bruce Lee", "Joseph Smith"], answer: 0 },
+  { question: "¿Qué tipo de máquinas hay en Pilates Élite?", options: ["Reformer con torre, Cadillac, Chair y Pilates aéreo", "Solo Reformer", "Solo máquinas de cardio"], answer: 0 },
+  { question: "¿Qué aparato se asocia principalmente al Pilates?", options: ["Reformer", "Bicicleta estática", "Cinta de correr"], answer: 0 },
+  { question: "¿Qué colores corporativos tiene Pilates Élite?", options: ["Negro y oro francés", "Rojo y blanco", "Verde y azul"], answer: 0 },
+  { question: "¿Cuál de estos NO es un principio del Pilates?", options: ["Control", "Fluidez", "Explosividad"], answer: 2 },
+  { question: "¿Qué debes traer a tus clases en Pilates Élite?", options: ["Toalla, calcetines antideslizantes y ropa deportiva", "Guantes de boxeo", "Cinturón de pesas"], answer: 0 },
+  { question: "¿Qué tipo de respiración se usa en Pilates?", options: ["Costal lateral", "Abdominal", "Clavicular"], answer: 0 },
+  { question: "¿Dónde está uno de los centros de Pilates Élite?", options: ["Calle Vicente Savall 11", "Calle Mayor 5", "Avenida de la Estación 3"], answer: 0 },
+  { question: "¿Qué máquina permite ejercicios aéreos con cuerdas y muelles?", options: ["Cadillac", "Chair", "Reformer"], answer: 0 },
+  { question: "¿Dónde están publicadas las normas de funcionamiento del centro Pilates Élite?", options: ["En la app", "En un cartel en la entrada", "Por correo"], answer: 0 },
+  { question: "¿Qué otro nombre recibe el método Pilates?", options: ["Contrología", "Flexilogía", "Resistilogía"], answer: 0 },
+  { question: "¿Qué app debes usar para reservar en Pilates Élite?", options: ["La app propia de Pilates Élite", "WhatsApp", "Facebook Messenger"], answer: 0 },
+  { question: "¿Qué ejercicio clásico se realiza con 100 respiraciones?", options: ["The Hundred", "Roll Up", "Teaser"], answer: 0 },
+  { question: "¿Cuánto tiempo antes debes cancelar una clase en Pilates Élite para no consumir el bono?", options: ["Al menos 2 horas", "10 minutos", "1 día"], answer: 0 },
+  { question: "¿Qué principio implica moverse con gracia y sin interrupciones?", options: ["Fluidez", "Fuerza", "Explosividad"], answer: 0 },
+  { question: "¿Qué modalidad de Pilates se ofrece en Pilates Élite?", options: ["Máquinas y aéreo", "Solo suelo", "Solo cardio"], answer: 0 },
+  { question: "¿Qué objetivo tiene el método Pilates?", options: ["Mejorar control corporal y alineación", "Ganar volumen muscular", "Correr más rápido"], answer: 0 },
+  { question: "¿Cómo acceden los alumnos a los horarios de las clases?", options: ["En la app, en la pestaña de reservas", "En un cartel en la puerta", "Por llamada telefónica"], answer: 0 },
+  { question: "¿Dónde desarrolló Joseph Pilates su método durante la Primera Guerra Mundial?", options: ["En un campo de prisioneros", "En un hospital de Berlín", "En Nueva York"], answer: 0 },
+  { question: "¿Cuál de estos NO es un ejercicio clásico de Pilates?", options: ["The Hundred", "Downward Dog", "Roll Up"], answer: 1 },
+  { question: "¿Qué aparato fue inventado por Joseph Pilates para rehabilitación?", options: ["Reformer", "Banda elástica", "Pelota suiza"], answer: 0 },
+  { question: "¿Qué músculo es clave en la activación del Powerhouse?", options: ["Transverso abdominal", "Bíceps", "Trapecio"], answer: 0 },
+  { question: "¿Qué se busca principalmente con el uso del Reformer?", options: ["Fortalecer el centro y alinear el cuerpo", "Mejorar la velocidad", "Incrementar masa muscular"], answer: 0 },
+  { question: "¿Qué principio de Pilates está relacionado con la atención consciente en el movimiento?", options: ["Concentración", "Velocidad", "Explosividad"], answer: 0 },
+  { question: "¿Qué aparato de Pilates tiene una plataforma móvil con muelles?", options: ["Reformer", "Chair", "Ladder Barrel"], answer: 0 },
+  { question: "¿Qué ejercicio de Pilates se realiza tumbado y consiste en rodar hacia arriba lentamente?", options: ["Roll Up", "Teaser", "Swan"], answer: 0 },
+  { question: "¿Qué significa Contrología?", options: ["El arte del control del cuerpo", "Una máquina de Pilates", "Un tipo de respiración"], answer: 0 },
+  // Avanzadas
+  { question: "¿Qué inventor influyó en Joseph Pilates en sus métodos de resistencia con muelles?", options: ["Alexander Graham Bell", "Eugen Sandow", "Thomas Edison"], answer: 1 },
+  { question: "¿Qué elemento distingue el Cadillac de otros aparatos de Pilates?", options: ["La jaula con cuerdas y muelles", "Las ruedas móviles", "La plataforma inclinada"], answer: 0 },
+  { question: "¿Cuál de estos músculos NO forma parte del core en Pilates?", options: ["Transverso abdominal", "Glúteo mayor", "Multífidos"], answer: 1 },
+  { question: "¿Qué fundador de un método corporal fue contemporáneo de Joseph Pilates?", options: ["Moshe Feldenkrais", "Arnold Schwarzenegger", "Tony Horton"], answer: 0 },
+  { question: "¿Qué término describe el patrón de respiración en The Hundred?", options: ["Inhalar 5, exhalar 5", "Inhalar 3, exhalar 7", "Inhalar 10, exhalar 10"], answer: 0 },
+  { question: "¿Qué se busca especialmente en el ejercicio Teaser?", options: ["Equilibrio y control del centro", "Fuerza explosiva de brazos", "Velocidad en la ejecución"], answer: 0 },
+  { question: "¿En qué país nació Joseph Pilates?", options: ["Alemania", "Austria", "Estados Unidos"], answer: 0 },
+  { question: "¿Qué ejercicio implica rodar hacia atrás manteniendo el control?", options: ["Rolling like a ball", "The Saw", "Swan"], answer: 0 },
+  { question: "¿Qué parte del cuerpo se debe estabilizar al usar el Chair?", options: ["Pelvis y cintura escapular", "Manos y pies", "Cuello"], answer: 0 },
+  { question: "¿Qué herramienta se utiliza en Pilates para medir precisión y alineación?", options: ["El espejo y la visualización", "El cronómetro", "La báscula"], answer: 0 },
+  { question: "¿Cuál es la característica clave del Ladder Barrel?", options: ["La curvatura para flexibilidad de columna", "Los muelles de resistencia", "La superficie deslizante"], answer: 0 },
+  { question: "¿Qué se potencia especialmente con el uso del Spine Corrector?", options: ["Flexibilidad de la columna", "Potencia en las piernas", "Fuerza de los bíceps"], answer: 0 },
+  { question: "¿Qué principio de Pilates está directamente vinculado al movimiento con propósito?", options: ["Precisión", "Explosividad", "Velocidad"], answer: 0 },
+  { question: "¿En qué década llegó Joseph Pilates a Estados Unidos?", options: ["1920", "1950", "1970"], answer: 0 },
+  { question: "¿Qué aparato de Pilates es el más versátil para cuerpo completo?", options: ["Reformer", "Banda elástica", "Banco de pesas"], answer: 0 },
+  { question: "¿Qué se requiere para realizar correctamente el Swan?", options: ["Extensión controlada de columna", "Fuerza explosiva en brazos", "Velocidad"], answer: 0 },
+  { question: "¿Qué distingue el Pilates clásico del contemporáneo?", options: ["El respeto al orden original y uso de aparatos tradicionales", "Uso de pesas y máquinas de cardio", "Énfasis en la velocidad"], answer: 0 },
+  { question: "¿Qué aparato es ideal para trabajar disociación de movimiento?", options: ["Chair", "Cinta de correr", "Pesas"], answer: 0 },
+  { question: "¿Qué ejercicio ayuda a articular vértebra por vértebra al rodar hacia atrás?", options: ["Rolling like a ball", "The Plank", "The Saw"], answer: 0 },
+  { question: "¿Cuál es el propósito de los muelles en el Reformer?", options: ["Aportar resistencia progresiva y asistencia", "Añadir peso estático", "Hacer el ejercicio más rápido"], answer: 0 },
+  { question: "¿Qué principio está relacionado con la integración de mente y cuerpo en Pilates?", options: ["Concentración", "Explosividad", "Velocidad"], answer: 0 },
+  { question: "¿Qué músculo estabilizador profundo es esencial en Pilates?", options: ["Multífidos", "Bíceps", "Trapecio"], answer: 0 },
+  { question: "¿Qué aparato permite trabajo en suspensión en Pilates?", options: ["Cadillac", "Ladder Barrel", "Magic Circle"], answer: 0 },
+  { question: "¿Qué aspecto prioriza la Contrología?", options: ["Dominio consciente de los movimientos", "Aumento de masa muscular", "Resistencia cardiovascular"], answer: 0 },
+  { question: "¿Qué ejercicio implica un movimiento de serrucho desde el tronco?", options: ["The Saw", "The Hundred", "Rolling like a ball"], answer: 0 }
+];
 
-    let currentQuestion = 0;
-    let score = 0;
-    let lives = 3;
-    let playerName = "";
-    let playerEmail = "";
-    let playerPhone = "";
+let currentQuestion = 0, score = 0, lives = 3;
+let playerName = "", playerEmail = "", playerPhone = "";
+let startTime = 0, timerInterval = null;
+let currentCorrectIndex = 0;
 
-    function startGame() {
-      playerName = document.getElementById("name").value.trim();
-      playerEmail = document.getElementById("email").value.trim();
-      playerPhone = document.getElementById("phone").value.trim();
+function shuffleOptions(options, correctIndex) {
+  const indexed = options.map((opt, i) => ({ opt, originalIndex: i }));
+  for (let i = indexed.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
+  }
+  const newOptions = indexed.map(el => el.opt);
+  const newAnswer = indexed.findIndex(el => el.originalIndex === correctIndex);
+  return { newOptions, newAnswer };
+}
 
-      if (!playerName || !playerEmail) {
-        alert("Por favor completa al menos nombre y email");
-        return;
-      }
+function startGame() {
+  playerName = document.getElementById("name").value.trim();
+  playerEmail = document.getElementById("email").value.trim();
+  playerPhone = document.getElementById("phone").value.trim();
+  if (!playerName || !playerEmail) { alert("Completa nombre y email"); return; }
+  document.getElementById("start-screen").classList.add("hidden");
+  document.getElementById("game-screen").classList.remove("hidden");
+  currentQuestion = 0; score = 0; lives = 3;
+  startTime = Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    document.getElementById("timer").textContent = `Tiempo: ${elapsed} s`;
+  }, 100);
+  loadQuestion();
+}
 
-      document.getElementById("start-screen").classList.add("hidden");
-      document.getElementById("game-screen").classList.remove("hidden");
-      loadQuestion();
-    }
+function loadQuestion() {
+  if (currentQuestion >= questions.length) { endGame(); return; }
+  const q = questions[currentQuestion];
+  const shuffled = shuffleOptions(q.options, q.answer);
+  currentCorrectIndex = shuffled.newAnswer;
+  document.getElementById("question").textContent = q.question;
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+  shuffled.newOptions.forEach((option, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = option;
+    btn.onclick = () => checkAnswer(i);
+    optionsDiv.appendChild(btn);
+  });
+  document.getElementById("lives").textContent = lives;
+  document.getElementById("score").textContent = score;
+}
 
-    function loadQuestion() {
-      if (currentQuestion >= questions.length) {
-        endGame();
-        return;
-      }
-
-      const q = questions[currentQuestion];
-      document.getElementById("question").textContent = q.question;
-      const optionsDiv = document.getElementById("options");
-      optionsDiv.innerHTML = "";
-
-      q.options.forEach((option, index) => {
-        const button = document.createElement("button");
-        button.textContent = option;
-        button.onclick = () => checkAnswer(index);
-        optionsDiv.appendChild(button);
-      });
-
-      document.getElementById("lives").textContent = lives;
-      document.getElementById("score").textContent = score;
-    }
-
-    function checkAnswer(selectedIndex) {
-      if (selectedIndex === questions[currentQuestion].answer) {
-        score += 10;
-        currentQuestion++;
-        loadQuestion();
-      } else {
-        lives--;
-        document.getElementById("lives").textContent = lives;
-        showFeedback();
-
-        if (lives <= 0) {
-          setTimeout(endGame, 1000);
-        } else {
-          currentQuestion++;
-          setTimeout(loadQuestion, 1000);
-        }
-      }
-    }
-
-    function showFeedback() {
-      const feedback = document.getElementById("feedback");
-      feedback.style.display = "block";
+function checkAnswer(i) {
+  if (i === currentCorrectIndex) {
+    score += 10;
+    const sound = document.getElementById("sound-correct");
+    sound.currentTime = 0;
+    sound.play();
+    showSuccess();
+    currentQuestion++;
+    setTimeout(loadQuestion, 1500);
+  } else {
+    lives--;
+    document.getElementById("lives").textContent = lives;
+    const sound = document.getElementById("sound-wrong");
+    sound.currentTime = 0;
+    sound.play();
+    showFeedback();
+    if (lives <= 0) {
+      document.getElementById("end-message").classList.remove("hidden");
       setTimeout(() => {
-        feedback.style.display = "none";
-      }, 1000);
+        endGame();
+      }, 3000);
+    } else {
+      currentQuestion++;
+      setTimeout(loadQuestion, 1500);
     }
+  }
+}
 
-    function endGame() {
-      document.getElementById("game-screen").classList.add("hidden");
-      document.getElementById("end-screen").classList.remove("hidden");
-      document.getElementById("final-score").textContent = `Puntuación final: ${score} puntos`;
-    }
+function showFeedback() {
+  const f = document.getElementById("feedback");
+  f.classList.remove("hidden");
+  setTimeout(() => { f.classList.add("hidden"); }, 1500);
+}
 
-    function restartGame() {
-      currentQuestion = 0;
-      score = 0;
-      lives = 3;
-      document.getElementById("end-screen").classList.add("hidden");
-      document.getElementById("start-screen").classList.remove("hidden");
-    }
+function showSuccess() {
+  const s = document.getElementById("success");
+  s.classList.remove("hidden");
+  setTimeout(() => { s.classList.add("hidden"); }, 1500);
+}
+
+function endGame() {
+  clearInterval(timerInterval);
+  const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+  const msg = `Nuevo resultado Juego de Pilates Élite:\nNombre: ${playerName}\nEmail: ${playerEmail}\nTeléfono: ${playerPhone}\nPuntos: ${score}\nTiempo: ${totalTime} s`;
+  const url = `https://wa.me/34747468357?text=${encodeURIComponent(msg)}`;
+  window.open(url, "_blank");
+}
   </script>
 </body>
 </html>
