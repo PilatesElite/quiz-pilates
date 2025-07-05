@@ -58,9 +58,8 @@
     </div>
   </div>
 
- <audio id="sound-correct" src="https://www.soundjay.com/human/applause-01.mp3"></audio>
-<audio id="sound-wrong" src="https://www.soundjay.com/human/boo-01.mp3"></audio>
-
+  <audio id="sound-correct" src="https://www.soundjay.com/human/applause-01.mp3"></audio>
+  <audio id="sound-wrong" src="https://www.soundjay.com/human/boo-01.mp3"></audio>
 
   <script>
 const questions = [
@@ -124,103 +123,116 @@ const questions = [
 ];
 
 let currentQuestion = 0, score = 0, lives = 3;
-let playerName = "", playerEmail = "", playerPhone = "";
-let startTime = 0, timerInterval = null;
-let currentCorrectIndex = 0;
+    let playerName = "", playerEmail = "", playerPhone = "";
+    let startTime = 0, timerInterval = null;
+    let currentCorrectIndex = 0;
 
-function shuffleOptions(options, correctIndex) {
-  const indexed = options.map((opt, i) => ({ opt, originalIndex: i }));
-  for (let i = indexed.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
-  }
-  const newOptions = indexed.map(el => el.opt);
-  const newAnswer = indexed.findIndex(el => el.originalIndex === correctIndex);
-  return { newOptions, newAnswer };
-}
-
-function startGame() {
-  playerName = document.getElementById("name").value.trim();
-  playerEmail = document.getElementById("email").value.trim();
-  playerPhone = document.getElementById("phone").value.trim();
-  if (!playerName || !playerEmail) { alert("Completa nombre y email"); return; }
-  document.getElementById("start-screen").classList.add("hidden");
-  document.getElementById("game-screen").classList.remove("hidden");
-  document.getElementById("main-title").classList.add("hidden");
-  currentQuestion = 0; score = 0; lives = 3;
-  startTime = Date.now();
-  timerInterval = setInterval(() => {
-    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-    document.getElementById("timer").textContent = `Tiempo: ${elapsed} s`;
-  }, 100);
-  loadQuestion();
-}
-
-function loadQuestion() {
-  if (currentQuestion >= questions.length) { endGame(); return; }
-  const q = questions[currentQuestion];
-  const shuffled = shuffleOptions(q.options, q.answer);
-  currentCorrectIndex = shuffled.newAnswer;
-  document.getElementById("question").textContent = q.question;
-  const optionsDiv = document.getElementById("options");
-  optionsDiv.innerHTML = "";
-  shuffled.newOptions.forEach((option, i) => {
-    const btn = document.createElement("button");
-    btn.textContent = option;
-    btn.onclick = () => checkAnswer(i);
-    optionsDiv.appendChild(btn);
-  });
-  document.getElementById("lives").textContent = lives;
-  document.getElementById("score").textContent = score;
-}
-
-function checkAnswer(i) {
-  if (i === currentCorrectIndex) {
-    score += 10;
-    const sound = document.getElementById("sound-correct");
-    sound.currentTime = 0;
-    sound.play();
-    showSuccess();
-    currentQuestion++;
-    setTimeout(loadQuestion, 1500);
-  } else {
-    lives--;
-    document.getElementById("lives").textContent = lives;
-    const sound = document.getElementById("sound-wrong");
-    sound.currentTime = 0;
-    sound.play();
-    showFeedback();
-    if (lives <= 0) {
-      document.getElementById("end-message").classList.remove("hidden");
-      setTimeout(() => {
-        endGame();
-      }, 3000);
-    } else {
-      currentQuestion++;
-      setTimeout(loadQuestion, 1500);
+    function shuffleQuestions(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     }
-  }
-}
 
-function showFeedback() {
-  const f = document.getElementById("feedback");
-  f.classList.remove("hidden");
-  setTimeout(() => { f.classList.add("hidden"); }, 1500);
-}
+    function shuffleOptions(options, correctIndex) {
+      const indexed = options.map((opt, i) => ({ opt, originalIndex: i }));
+      for (let i = indexed.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
+      }
+      const newOptions = indexed.map(el => el.opt);
+      const newAnswer = indexed.findIndex(el => el.originalIndex === correctIndex);
+      return { newOptions, newAnswer };
+    }
 
-function showSuccess() {
-  const s = document.getElementById("success");
-  s.classList.remove("hidden");
-  setTimeout(() => { s.classList.add("hidden"); }, 1500);
-}
+    function startGame() {
+      playerName = document.getElementById("name").value.trim();
+      playerEmail = document.getElementById("email").value.trim();
+      playerPhone = document.getElementById("phone").value.trim();
+      if (!playerName || !playerEmail) {
+        alert("Completa nombre y email");
+        return;
+      }
+      document.getElementById("start-screen").classList.add("hidden");
+      document.getElementById("game-screen").classList.remove("hidden");
+      document.getElementById("main-title").classList.add("hidden");
+      currentQuestion = 0; score = 0; lives = 3;
+      shuffleQuestions(questions);
+      startTime = Date.now();
+      timerInterval = setInterval(() => {
+        const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+        document.getElementById("timer").textContent = `Tiempo: ${elapsed} s`;
+      }, 100);
+      loadQuestion();
+    }
 
-function endGame() {
-  clearInterval(timerInterval);
-  const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
-  const msg = `Nuevo resultado Juego de Pilates Élite:\nNombre: ${playerName}\nEmail: ${playerEmail}\nTeléfono: ${playerPhone}\nPuntos: ${score}\nTiempo: ${totalTime} s`;
-  const url = `https://wa.me/34747468357?text=${encodeURIComponent(msg)}`;
-  window.open(url, "_blank");
-}
+    function loadQuestion() {
+      if (currentQuestion >= questions.length) { endGame(); return; }
+      const q = questions[currentQuestion];
+      const shuffled = shuffleOptions(q.options, q.answer);
+      currentCorrectIndex = shuffled.newAnswer;
+      document.getElementById("question").textContent = q.question;
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      shuffled.newOptions.forEach((option, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => checkAnswer(i);
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById("lives").textContent = lives;
+      document.getElementById("score").textContent = score;
+    }
+
+    function checkAnswer(i) {
+      if (i === currentCorrectIndex) {
+        score += 10;
+        const sound = document.getElementById("sound-correct");
+        sound.currentTime = 0;
+        sound.play();
+        showSuccess();
+        currentQuestion++;
+        setTimeout(loadQuestion, 1500);
+      } else {
+        lives--;
+        document.getElementById("lives").textContent = lives;
+        const sound = document.getElementById("sound-wrong");
+        sound.currentTime = 0;
+        sound.play();
+        showFeedback();
+        if (lives <= 0) {
+          document.getElementById("end-message").classList.remove("hidden");
+          setTimeout(() => { endGame(); }, 3000);
+        } else {
+          currentQuestion++;
+          setTimeout(loadQuestion, 1500);
+        }
+      }
+    }
+
+    function showFeedback() {
+      const f = document.getElementById("feedback");
+      f.classList.remove("hidden");
+      setTimeout(() => { f.classList.add("hidden"); }, 1500);
+    }
+
+    function showSuccess() {
+      const s = document.getElementById("success");
+      s.classList.remove("hidden");
+      setTimeout(() => { s.classList.add("hidden"); }, 1500);
+    }
+
+    function endGame() {
+      clearInterval(timerInterval);
+      const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+      const msg = `Nuevo resultado Juego de Pilates Élite:\nNombre: ${playerName}\nEmail: ${playerEmail}\nTeléfono: ${playerPhone}\nPuntos: ${score}\nTiempo: ${totalTime} s`;
+      const url = `https://wa.me/34747468357?text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank");
+      document.getElementById("game-screen").classList.add("hidden");
+      document.getElementById("start-screen").classList.remove("hidden");
+      document.getElementById("main-title").classList.remove("hidden");
+      document.getElementById("end-message").classList.add("hidden");
+    }
   </script>
 </body>
 </html>
